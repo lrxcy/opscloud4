@@ -23,27 +23,40 @@ public class TemplateUtil {
     @Resource
     private StringEncryptor stringEncryptor;
 
+    private static final String CREDENTIAL = "credential";
+
     public interface Names {
-        String USERNAME = "credentialUsername";
-        String PASSWORD = "credentialPassword";
-        String TOKEN = "credentialToken";
-        String ACCESS_KEY = "credentialAccessKey";
-        String SECRET = "credentialSecret";
+        String USERNAME = CREDENTIAL + "Username";
+        String PASSWORD = CREDENTIAL + "Password";
+        String TOKEN = CREDENTIAL + "Token";
+        String ACCESS_KEY = CREDENTIAL + "AccessKey";
+        String SECRET = CREDENTIAL + "Secret";
     }
 
+    /**
+     * 渲染模版
+     *
+     * @param propsYml   YAML
+     * @param credential
+     * @return
+     */
     public String renderTemplate(String propsYml, Credential credential) {
-        String credential1 = decrypt(credential.getCredential());
-        SimpleDict dict = CredentialTemplateDictBuilder.newBuilder()
-                .paramEntry(Names.USERNAME, credential.getUsername())
-                .paramEntry(Names.PASSWORD, credential1)
-                .paramEntry(Names.TOKEN, credential1)
-                .paramEntry(Names.ACCESS_KEY, credential1)
-                .build();
+        SimpleDict dict = buildDict(credential);
         if (credential.getKind() == CredentialKindEnum.ACCESS_KEY.getKind()) {
             String credential2 = decrypt(credential.getCredential2());
             dict.put(Names.SECRET, credential2);
         }
         return renderTemplate(propsYml, dict.getDict());
+    }
+
+    private SimpleDict buildDict(Credential credential) {
+        String decryptedCredential = decrypt(credential.getCredential());
+        return CredentialTemplateDictBuilder.newBuilder()
+                .paramEntry(Names.USERNAME, credential.getUsername())
+                .paramEntry(Names.PASSWORD, decryptedCredential)
+                .paramEntry(Names.TOKEN, decryptedCredential)
+                .paramEntry(Names.ACCESS_KEY, decryptedCredential)
+                .build();
     }
 
     private String decrypt(String str) {
