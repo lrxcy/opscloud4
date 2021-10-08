@@ -35,7 +35,7 @@ spring:
       - ssh-server
       - opscloud
   redis:
-    host: redis.opscloud.local
+    host: redis
     port: 6379
     password:
     jedis:
@@ -49,7 +49,7 @@ spring:
   datasource:
     druid:
       opscloud:
-        url: jdbc:mysql://mysql.opscloud.local:3306/opscloud4?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+        url: jdbc:mysql://mysql:3306/opscloud4?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
         username: opscloud4
         password:
         initial-size: 5
